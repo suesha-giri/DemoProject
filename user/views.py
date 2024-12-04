@@ -1,10 +1,10 @@
 from rest_framework.views import APIView
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, LoginSerializer
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 from rest_framework.permissions import AllowAny
-# Create your views here.
+
 
 class RegisterView(APIView):
     permission_classes = [AllowAny,]
@@ -24,7 +24,30 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    permission_classes = [AllowAny,]
 
     def post(self, request):
-        pass
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        token, _ = Token.objects.get_or_create(user=serializer.validated_data['user'])
+        return Response({"token": token.key, "message": "Login successful!"}, status=status.HTTP_200_OK)    
+
+
+class LogoutView(APIView):
+
+    def post(self, request):
+        try:
+            token = Token.objects.get(user=request.user)
+            token.delete()
+            return Response(
+                {"message": "Successfully logged out."},
+                status=status.HTTP_200_OK
+            )
+        except Token.DoesNotExist:
+            return Response(
+                {"error": "Token not found or already logged out."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+            
     

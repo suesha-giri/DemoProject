@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from django.db.models import Q
+from django.contrib.auth import authenticate
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,3 +32,25 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password')
         user = User.objects.create_user(**validated_data)
         return user
+    
+
+class LoginSerializer(serializers.ModelSerializer):
+    login = serializers.CharField()
+    class Meta:
+        model = User
+        fields = ['login', 'password']
+
+    def validate(self, attrs):
+        user = User.objects.filter(Q(email=attrs['login']) | Q(username=attrs['login'])).first()
+        if not user:
+            raise serializers.ValidationError("User does not exist. Please register first.")
+        
+        auth_user = authenticate(username=user.username, password=attrs['password'])
+
+        if not auth_user:
+            raise serializers.ValidationError({"password": "Invalid password."})
+        
+        attrs['user'] = auth_user
+        
+        return attrs
+
