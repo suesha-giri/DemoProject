@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'user',
     'geography',
 
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,6 +87,14 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+CORS_ALLOWED_ORIGINS = [
+    'http://192.168.1.91',
+    'http://192.168.1.84',
+    'http://192.168.52.60',
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Password validation
