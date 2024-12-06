@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+
 MIDDLEWARE += [
        'django.middleware.security.SecurityMiddleware',
        'whitenoise.middleware.WhiteNoiseMiddleware',
