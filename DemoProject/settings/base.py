@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'user',
+    'geography',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -80,12 +81,8 @@ WSGI_APPLICATION = 'DemoProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # Use PostgreSQL backend
-        'NAME': 'demoproject',  # Replace with your database name
-        'USER': 'postgres',  # Replace with your PostgreSQL username
-        'PASSWORD': 'suesha',  # Replace with your PostgreSQL password
-        'HOST': 'localhost',  # Change this if you're using a remote server
-        'PORT': '5432',  # Default PostgreSQL port
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -141,4 +138,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',  # Default permission for views
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',  # Use default pagination
+    'PAGE_SIZE': 10,  # Number of items per page
 }
